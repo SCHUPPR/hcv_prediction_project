@@ -94,3 +94,12 @@ relatively large, large enough to justify removing outliers."""
 """The distributions no longer have large empty spaces, again validating
 that the outliers were removed from the dataset."""
 
+"""Since our classification problem only includes creating a distinction 
+between donor and hcv patients, we need to convert all cirrhosis and fibrosis
+values to hcv."""
+
+hcv_df_binary_health = hcv_no_outliers.copy()
+
+hcv_df_binary_health["Health_Status"] = hcv_df_binary_health["Health_Status"].map(
+    {"Fibrosis": "Hepatitis", "Cirrhosis": "Hepatitis", "Donor": "Donor",
+      "Hepatitis": "Hepatitis"})
