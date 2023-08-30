@@ -18,6 +18,9 @@ sns.set_theme()
 # Loading cleaned dataset
 hcv_df = pd.read_csv("hcv_data_clean.csv")
 
+# Creating alternate dataframe for keeping 'outliers'
+hcv_df_out = hcv_df.copy()
+
 # Lab Result Columns:
 lab_tests = ['ALB', 'ALP', 'ALT', 'AST', 'BIL', 'CHE', 'CHOL', 'CREA', 'GGT', 'PROT']
 
@@ -26,10 +29,13 @@ lab_tests = ['ALB', 'ALP', 'ALT', 'AST', 'BIL', 'CHE', 'CHOL', 'CREA', 'GGT', 'P
 #     fig, ax = plt.subplots()
 #     hcv_df[test].plot.hist(title=test)
 
-"""The lab result distributions indicate that there are a quite a few outliers
+""" 
+(AMMENDED) - See later sections about outlier importance
+The lab result distributions indicate that there are a quite a few outliers
 in the dataset. Many of the plots appear to have a lot of empty space on either
 the right or left hand side, this is due to an outlier. No we'll attempt to 
-isolate and remove the outliers."""
+isolate and remove the outliers.
+"""
 
 # To identify outliers we will use the IQR method
 
@@ -83,23 +89,34 @@ hcv_df["PROT"] = hcv_df["PROT"].apply(outlier_prot)
 hcv_no_outliers = hcv_df.dropna()
 # print(hcv_no_outliers.shape)
 
-"""The new shape of the dataframe without outliers is (432,14) which is still
-relatively large, large enough to justify removing outliers."""
+"""
+The new shape of the dataframe without outliers is (432,14) which is still
+relatively large, large enough to justify removing outliers.
+"""
 
 # Examining the lab test distributions again:
 # for test in lab_tests:
 #     fig, ax = plt.subplots()
 #     hcv_no_outliers[test].plot.hist(title=test)
 
-"""The distributions no longer have large empty spaces, again validating
-that the outliers were removed from the dataset."""
+"""
+The distributions no longer have large empty spaces, again validating
+that the outliers were removed from the dataset.
+"""
 
-"""Since our classification problem only includes creating a distinction 
+"""
+Since our classification problem only includes creating a distinction 
 between donor and hcv patients, we need to convert all cirrhosis and fibrosis
-values to hcv."""
+values to hcv.
+"""
 
 hcv_df_binary_health = hcv_no_outliers.copy()
+hcv_df_binary_health_outliers = hcv_df_out.copy()
 
 hcv_df_binary_health["Health_Status"] = hcv_df_binary_health["Health_Status"].map(
+    {"Fibrosis": "Hepatitis", "Cirrhosis": "Hepatitis", "Donor": "Donor",
+      "Hepatitis": "Hepatitis"})
+
+hcv_df_binary_health_outliers["Health_Status"] = hcv_df_binary_health_outliers["Health_Status"].map(
     {"Fibrosis": "Hepatitis", "Cirrhosis": "Hepatitis", "Donor": "Donor",
       "Hepatitis": "Hepatitis"})

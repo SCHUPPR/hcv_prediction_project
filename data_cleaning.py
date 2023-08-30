@@ -22,7 +22,9 @@ raw_columns = raw_data.columns
 raw_dim = raw_data.shape
 # (615, 14)
 
-"""Handling Missing Data"""
+"""
+Handling Missing Data
+"""
 
 # Establishing number of NaN's in each column
 raw_nans = raw_data.isna().sum()
@@ -46,7 +48,9 @@ raw_duplicates = raw_data[raw_data.duplicated()]
 # No duplicate rows
 
 
-"""Fixing structural characteristics such as column names, dtypes, etc."""
+"""
+Fixing structural characteristics such as column names, dtypes, etc.
+"""
 
 # Renaming columns
 raw_data = raw_data.rename(columns={"Unnamed: 0": "Patient_ID", "Category": "Health_Status"})
